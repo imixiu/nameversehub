@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+// Auto-generated about page HTML for NameverseHub
+export const ABOUT_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -451,3 +452,4 @@
 </body>
 </html>
 
+`;

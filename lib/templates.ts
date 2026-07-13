@@ -238,7 +238,6 @@ export const HEADER_HTML = `<!DOCTYPE html>
       <a href="/meanings">By Meaning</a>
       <a href="/trends">Trends</a>
       <a href="/about">About</a>
-      <a href="/author/team">Our Team</a>
     </nav>
     <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
   </div>
