@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "nameversehub",
+  "account_id": "25e5887649f21af7f2869497017cb46f",
+  "compatibility_date": "2025-06-15",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": true,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    { "pattern": "nameversehub.com/*", "zone_name": "nameversehub.com" }
+  ],
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "nameversehub" }
+  ]
+}

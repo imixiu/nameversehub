@@ -1,0 +1,25 @@
+{
+  "name": "nameversehub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "cf:build": "npx @opennextjs/cloudflare build",
+    "cf:deploy": "npx wrangler deploy"
+  },
+  "dependencies": {
+    "mysql2": "^3.22.5",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.6.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^4.20.0"
+  }
+}
