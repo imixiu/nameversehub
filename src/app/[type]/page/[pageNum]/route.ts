@@ -34,7 +34,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
         <div class="card-body">
           <h2>${a.title}</h2>
           <p>${excerpt}</p>
-          <div class="card-meta"><span>${a.author || ""}</span><span>${a.modified_time ? new Date(a.modified_time).toLocaleDateString() : ""}</span></div>
         </div>
       </a>`;
     }

@@ -36,6 +36,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/trends`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
   ];
 
+  // Add taxonomy sub-pages from tag field
+  try {
+    const taxConn = await mysql.createConnection(getConnectionConfig());
+    // Get distinct origin/meaning/trend values from tag field
+    const [tagRows] = await taxConn.query(
+      `SELECT DISTINCT
+         SUBSTRING_INDEX(SUBSTRING_INDEX(t.val, ':', -1), '|', 1) AS value,
+         CASE WHEN t.val LIKE 'origin:%' THEN 'origins'
+              WHEN t.val LIKE 'meaning:%' THEN 'meanings'
+              WHEN t.val LIKE 'trend:%' THEN 'trends'
+         END AS dimension
+       FROM (
+         SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(tag, '|', n.n), '|', -1) AS val
+         FROM articles
+         JOIN (
+           SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+           UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+         ) n ON n.n <= 1 + LENGTH(tag) - LENGTH(REPLACE(tag, '|', ''))
+         WHERE site = ? AND is_online = 'Y' AND tag LIKE '%origin:%'
+       ) t
+       WHERE t.val LIKE 'origin:%' OR t.val LIKE 'meaning:%' OR t.val LIKE 'trend:%'`,
+      [SITE]
+    );
+    await taxConn.end();
+
+    for (const row of tagRows as any[]) {
+      if (row.value && row.dimension) {
+        entries.push({
+          url: `${BASE_URL}/${row.dimension}/${row.value}`,
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: 0.6,
+        });
+      }
+    }
+  } catch (e) {
+    // Taxonomy sitemap is non-critical
+  }
+
   try {
     const conn = await mysql.createConnection(getConnectionConfig());
     const [rows] = await conn.query(

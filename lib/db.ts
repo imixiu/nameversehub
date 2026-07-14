@@ -60,7 +60,7 @@ export async function getArticleBySlug(slug: string, type: string) {
 
 export async function getRelatedArticles(type: string, slug: string, limit: number = 4) {
   const rows = await query(
-    "SELECT a.short_title, a.title, a.type, a.url, a.cover_img FROM articles a WHERE a.site = ? AND a.type = ? AND a.short_title != ? AND a.is_online = 'Y' ORDER BY RAND() LIMIT ?",
+    "SELECT a.short_title, a.title, a.type, a.url, a.cover_image FROM articles a WHERE a.site = ? AND a.type = ? AND a.short_title != ? AND a.is_online = 'Y' ORDER BY RAND() LIMIT ?",
     [SITE, type, slug, limit]
   );
   return rows;
@@ -104,6 +104,49 @@ export async function getTotalArticleCount() {
   const rows = await query(
     "SELECT COUNT(*) as cnt FROM articles WHERE site = ? AND is_online = 'Y'",
     [SITE]
+  );
+  return rows[0]?.cnt || 0;
+}
+
+
+// ── Taxonomy queries (tag field: "origin:x|meaning:y|trend:z") ──
+
+export async function getTaxonomyCounts(dimension: string): Promise<{ value: string; count: number }[]> {
+  // Extract values for a given dimension (e.g. "origin") and count occurrences
+  const rows = await query(
+    `SELECT
+       SUBSTRING_INDEX(SUBSTRING_INDEX(t.val, ':', -1), '|', 1) AS value,
+       COUNT(*) AS count
+     FROM (
+       SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(tag, '|', n.n), '|', -1) AS val
+       FROM articles
+       JOIN (
+         SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+         UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+       ) n ON n.n <= 1 + LENGTH(tag) - LENGTH(REPLACE(tag, '|', ''))
+       WHERE site = ? AND is_online = 'Y' AND tag LIKE ?
+     ) t
+     WHERE t.val LIKE ?
+     GROUP BY value
+     ORDER BY count DESC`,
+    [SITE, `%${dimension}:%`, `${dimension}:%`]
+  );
+  return rows;
+}
+
+export async function getArticlesByTagFragment(tagFragment: string, page: number, pageSize: number = 20) {
+  const offset = (page - 1) * pageSize;
+  const rows = await query(
+    "SELECT a.*, au.name as author_name, au.slug as author_slug, au.img as author_img, au.description as author_bio FROM articles a LEFT JOIN authors au ON a.author = au.name AND au.site = a.site WHERE a.site = ? AND a.is_online = 'Y' AND a.tag LIKE ? ORDER BY a.title ASC LIMIT ? OFFSET ?",
+    [SITE, `%${tagFragment}%`, pageSize, offset]
+  );
+  return rows;
+}
+
+export async function getArticleCountByTagFragment(tagFragment: string) {
+  const rows = await query(
+    "SELECT COUNT(*) as cnt FROM articles WHERE site = ? AND is_online = 'Y' AND tag LIKE ?",
+    [SITE, `%${tagFragment}%`]
   );
   return rows[0]?.cnt || 0;
 }

@@ -217,7 +217,16 @@ export const HEADER_HTML = `<!DOCTYPE html>
   <link rel="icon" href="/icon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>${SHARED_CSS}</style>
+  <style>${SHARED_CSS}
+/* TAXONOMY */
+.taxonomy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-bottom:48px}
+.taxonomy-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;text-decoration:none;color:var(--text);transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column;gap:8px}
+.taxonomy-card:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(196,155,92,.1)}
+.taxonomy-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin:0}
+.taxonomy-count{font-size:13px;font-weight:500;color:var(--gold-dark)}
+.taxonomy-summary{text-align:center;font-size:14px;color:var(--text-light);margin-bottom:32px}
+@media(max-width:768px){.taxonomy-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
   <link rel="stylesheet" href="/article.css">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-95PY8PSZ0Y"></script>

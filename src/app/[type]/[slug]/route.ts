@@ -7,11 +7,8 @@ export const dynamic = "force-dynamic";
 
 function cleanContent(html: string): string {
   if (!html) return "";
-  return html
-    .replace(/<div[^>]*>/gi, "")
-    .replace(/<\/div>/gi, "")
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+  // Content from SmartBuy API is clean — no stripping needed
+  return html;
 }
 
 const NAME_PAGE_ASSETS = `
@@ -36,7 +33,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
     const title = article.title || slug;
     const description = article.summary ? article.summary.substring(0, 160) : seo.description;
     const canonical = `https://nameversehub.com/${type}/${slug}`;
-    const ogImage = article.cover_img || "";
+    const ogImage = article.cover_image || "";
 
     const isNamePage = type === "names";
 
@@ -51,7 +48,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
       header = header.replace("</head>", NAME_PAGE_ASSETS + "\n</head>");
     }
 
-    const coverHtml = article.cover_img ? `<div class="article-cover"><img src="${article.cover_img}" alt="${title}"></div>` : "";
+    const coverHtml = article.cover_image ? `<div class="article-cover"><img src="${article.cover_image}" alt="${title}"></div>` : "";
     const metaHtml = `<div class="article-meta">
       <div>
         <div class="author-name">${article.author_name || "NameverseHub"}</div>
@@ -100,7 +97,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
 
     const html = header + breadcrumb +
       `<div class="${bodyClass}"><div class="${bodyInnerClass}">` +
-      metaHtml + coverHtml +
+      coverHtml +
       `<div class="${bodyContentClass}">${content}</div>` +
       relatedHtml +
       `</div></div>` +
