@@ -6,6 +6,7 @@ export const INDEX_HTML = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nameverse Hub - Discover the Story Behind Every Name</title>
   <meta name="description" content="Explore 105,000+ name meanings and origins, backed by real US Social Security data from 1880–2025. Discover the true story and historical popularity behind every name.">
+  <meta name="msvalidate.01" content="C396E9907374E29FB46754412E4E3FB7" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
