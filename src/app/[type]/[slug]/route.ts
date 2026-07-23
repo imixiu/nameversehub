@@ -31,9 +31,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
 
     const seo = getTypeSeo(type);
     const title = article.title || slug;
-    const description = article.summary ? article.summary.substring(0, 160) : seo.description;
+    const description = article.description ? article.description.substring(0, 160) : seo.description;
     const canonical = `https://nameversehub.com/${type}/${slug}`;
-    const ogImage = article.cover_image || "";
+    const ogImage = article.cover_image || "https://nameversehub.com/icon.png";
 
     const isNamePage = type === "names";
 

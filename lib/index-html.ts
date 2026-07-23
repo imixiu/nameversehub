@@ -439,7 +439,7 @@ export const INDEX_HTML = `<!DOCTYPE html>
       .nav-links { display: none; }
     }
   </style>
-</head>
+<meta property="og:title" content="Nameverse Hub - Discover the Story Behind Every Name">\n<meta property="og:description" content="Explore 105,000+ name meanings and origins, backed by real US Social Security data from 1880–2025. Discover the true story and historical popularity behind every name.">\n</head>
 <body>
 
   <!-- NAV -->
