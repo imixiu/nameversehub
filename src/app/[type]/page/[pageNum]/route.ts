@@ -51,7 +51,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
     if (page < totalPages) articlesHtml += `<a href="/${type}/page/${page + 1}">&rarr;</a>`;
     articlesHtml += "</div>";
 
-    const html = header + `
+    let html = header + `
       <div class="container">
         <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><a href="/${type}">${seo.label}</a><span class="sep">/</span>Page ${page}</div>
         <div class="category-header">
@@ -62,7 +62,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ type: s
       </div>
     ` + FOOTER_HTML;
 
-    return new Response(html, {
+    const htmlNoindex = html.replace("</head>", '<meta name="robots" content="noindex, follow">\n</head>');
+  return new Response(htmlNoindex, {
       headers: {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "s-maxage=3600, stale-while-revalidate",

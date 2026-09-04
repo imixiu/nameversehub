@@ -1,0 +1,50 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  // === Noindex rules ===
+  const { pathname: _pathname } = request.nextUrl;
+  const pageMatch = _pathname.match(/\/page\/(\d+)/);
+  if (pageMatch && parseInt(pageMatch[1], 10) > 1) {
+    const r = NextResponse.next();
+    r.headers.set("X-Robots-Tag", "noindex, follow");
+    return r;
+  }
+  if (_pathname === "/author" || _pathname === "/authors" || _pathname.startsWith("/author/") || _pathname.startsWith("/authors/")) {
+    const r = NextResponse.next();
+    r.headers.set("X-Robots-Tag", "noindex, follow");
+    return r;
+  }
+  // === End noindex rules ===
+
+  const url = request.nextUrl.clone();
+  const host = request.headers.get("host") || "";
+
+  // www -> bare domain redirect
+  if (host.startsWith("www.")) {
+    url.hostname = host.replace(/^www\./, "");
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ?page=N -> /page/N redirect
+  const page = url.searchParams.get("page");
+  if (page && /^\d+$/.test(page)) {
+    const pathname = url.pathname;
+    url.searchParams.delete("page");
+    const newPath = pathname.endsWith("/") ? pathname + "page/" + page : pathname + "/page/" + page;
+    url.pathname = newPath;
+    return NextResponse.redirect(url, 301);
+  }
+
+  // Redirect /author and /authors to /author/team (which has noindex)
+  if (url.pathname === "/author" || url.pathname === "/authors") {
+    return NextResponse.redirect(new URL("/author/team", request.url), 308);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!_next|api|icon.png|robots.txt|sitemap.xml).*)"],
+};

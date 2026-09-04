@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "NEXT_PRIVATE_TURBOPACK=0 next build",
     "start": "next start",
-    "cf:build": "npx @opennextjs/cloudflare build",
+    "cf:build": "npx -y @opennextjs/cloudflare build && node scripts/postbuild-cache.mjs",
     "cf:deploy": "npx wrangler deploy"
   },
   "dependencies": {
